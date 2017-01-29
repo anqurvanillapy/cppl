@@ -1,5 +1,6 @@
 /**
  *  Empty Class
+ *  ===========
  *
  *  An empty class exactly exists and has the size of 1 byte, since its objects
  *  shoud be different and "new" always returns pointers to distinct objects. An
