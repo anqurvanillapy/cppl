@@ -1,5 +1,5 @@
 /**
- *  Empty Class
+ *  Empty class
  *  ===========
  *
  *  An empty class exactly exists and has the size of 1 byte, since its objects

@@ -1,5 +1,5 @@
 /**
- *  Macro Multi-expressions
+ *  Macro multi-expressions
  *  =======================
  *
  *  2 ways of containing multiple expressions in macros
