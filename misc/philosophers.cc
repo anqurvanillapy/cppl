@@ -1,8 +1,9 @@
 /**
- *  Dinning Philosophers
- *  ====================
+ *  Dining Philosophers
+ *  ===================
  *
  *  Note: This is not the solution, but used for demonstrating deadlocks.
+ *  Compile with -lpthread and -std=c++11.
  */
 
 #include <iostream>
