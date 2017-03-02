@@ -8,6 +8,7 @@ C/C++ Lab: Some exercise code in C/C++.
     + Containers
     + Generics (templates)
     + Polymorphism (virtual functions)
+    + Keywords, specifiers, qualifiers, etc.
     + Misc (notes or some easy hacks)
 
 License
