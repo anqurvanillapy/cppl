@@ -4,6 +4,7 @@ cppl
 C/C++ Lab: Some exercise code in C/C++.
 
 - This repo mainly covers:
+    + Data structures
     + Memory management (smart pointers, memory fence, etc.)
     + Containers
     + Generics (templates)
