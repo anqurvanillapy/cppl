@@ -4,6 +4,8 @@
  *
  *  Use a decorator to wrap a function, without modifying its internals,
  *  to record its number of being called by others.
+ *
+ *  Note: Compile with -std=c++11.
  */
 
 #include <iostream>
@@ -17,7 +19,8 @@ public:
     decorator(std::function<R(Args ...)> _f)
         : called(0), f(_f) { /* nop */ }
 
-    R operator()(Args ... args) {
+    R
+    operator()(Args ... args) {
         called++;
         std::cout << "called: " << called << std::endl;
         return f(args...);
