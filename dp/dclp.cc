@@ -2,7 +2,7 @@
  *  DCLP
  *  ====
  *
- *  DCLP (double-checked locking pattern) is a case studyy of lock-free
+ *  DCLP (double-checked locking pattern) is a case study of lock-free
  *  programming.
  *
  *  The following class is a singleton that uses the DCLP idiom with acquiring
@@ -24,7 +24,7 @@ public:
         cargo* tmp = instance.load(std::memory_order_relaxed);
         std::atomic_thread_fence(std::memory_order_acquire);
 
-/* Visible erea by sync (start) */
+/* Visible area by sync (start) */
 
         // NULL contains nullptr, actually.
         if (tmp == nullptr) {
@@ -58,6 +58,8 @@ private:
     static std::mutex mutex;
 };
 
+/// The static variables are general (static) to the class, so when using
+/// it in another file it is necessary to redeclare it.
 std::atomic<cargo*> cargo::instance;
 std::mutex cargo::mutex;
 
