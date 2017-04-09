@@ -44,6 +44,7 @@ private:
 int
 main(int argc, const char *argv[])
 {
-    cargo::get_instance();
+    std::cout << &cargo::get_instance() << std::endl;
+    std::cout << &cargo::get_instance() << std::endl;
     return 0;
 }
