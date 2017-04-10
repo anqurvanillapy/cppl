@@ -59,7 +59,7 @@ private:
 };
 
 /// The static variables are general (static) to the class, so when using
-/// it in another file it is necessary to redeclare it.
+/// them it is necessary to redeclare it.
 std::atomic<cargo*> cargo::instance;
 std::mutex cargo::mutex;
 

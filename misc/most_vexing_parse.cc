@@ -3,20 +3,27 @@
  *  =================
  *
  *  A specific form of syntactic ambiguity resolution.
+ *
+ *  Note: Compile with -std=c++11.
  */
+
+#include <iostream>
 
 class Foo {
 public:
-    Foo();
+    Foo() { /* nop */ }
     // Or overloads the operator().
     // void operator()();
 };
 
 class Bar {
 public:
-    Bar(const Foo &f);
+    Bar(const Foo &f) { /* nop */ }
 
-    void sayhi();
+    void sayhi()
+    {
+        std::cout << "Hi!" << std::endl;
+    }
 };
 
 int
