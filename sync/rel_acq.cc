@@ -1,3 +1,10 @@
+/**
+ *  Release-Acquire
+ *  ===============
+ *
+ *  An example of Releasing-Acquire ordering.
+ */
+
 #include <iostream>
 #include <thread>
 #include <atomic>

@@ -4,6 +4,7 @@ cppl
 C/C++ Lab: Some exercise code in C/C++.
 
 - This repo mainly covers:
+    + All about synchronizations, e.g. memory order.
     + Data structures
     + Design patterns
     + Memory management (smart pointers, memory fence, etc.)

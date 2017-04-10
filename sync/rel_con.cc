@@ -1,3 +1,10 @@
+/**
+ *  Release-Consume
+ *  ===============
+ *
+ *  An example of Release-Consume ordering.
+ */
+
 #include <iostream>
 #include <thread>
 #include <atomic>
