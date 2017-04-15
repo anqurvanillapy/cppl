@@ -16,18 +16,19 @@ template <class> class decorator;
 template <class R, class... Args>
 class decorator<R(Args ...)> {
 public:
-    decorator(std::function<R(Args ...)> _f)
-        : called(0), f(_f) { /* nop */ }
+    decorator(std::function<R(Args ...)> f)
+    : called(0), _f(f) { /* nop */ }
 
     R
-    operator()(Args ... args) {
+    operator()(Args ... args)
+    {
         called++;
         std::cout << "called: " << called << std::endl;
-        return f(args...);
+        return _f(args...);
     }
 private:
     unsigned called;
-    std::function<R(Args ...)> f;
+    std::function<R(Args ...)> _f;
 };
 
 template <class R, class... Args>
