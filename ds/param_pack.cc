@@ -1,5 +1,5 @@
 /**
- *  Parameter Pack
+ *  Parameter pack
  *  ==============
  *
  *  Unlike C-style variable arguments but like Python's arbitrary argument
