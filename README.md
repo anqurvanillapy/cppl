@@ -8,10 +8,12 @@ C/C++ Lab: Some exercise code in C/C++.
     + Data structures
     + Design patterns
     + Memory management (smart pointers, memory fence, etc.)
+    + Value categories
     + Containers
     + Generics (templates)
     + Polymorphism (virtual functions)
     + Keywords, specifiers, qualifiers, etc.
+    + Futures
     + Misc (notes or some easy hacks)
 
 License
