@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stddef.h>
+#include <stddef.h> // for size_t in gcc, I'm sorry
 
 void *
 mymemcpy(void *dest, const void *src, size_t n)
@@ -15,7 +15,7 @@ mymemcpy(void *dest, const void *src, size_t n)
     char *pd, *ps;
     // Use n directly for size_t might be 64-bit, thus unsafe for an int cast.
     for (pd = (char *)dest, ps = (char *)src; n > 0; --n, ++pd, ++ps) *pd = *ps;
-    return (void *)pd;
+    return pd;
 }
 
 typedef struct {
