@@ -8,6 +8,9 @@
  *  - But... why? They are atomics why didn't you just...
  *  - ikr.
  *
+ *  (Alright, my thought is that, if the architecture is based on sequential
+ *  consistency, introducing atomics then seems unnecessary.)
+ *
  *  Note: Compile with -std=c++11 -lpthread.
  */
 
