@@ -16,11 +16,10 @@
 std::atomic_int cnt = {0};
 
 /// Direct-initialization.
-// std::atomic_int cnt(0);
 // std::atomic_int cnt{0};
 
 void
-incre()
+inc()
 {
     for (int n = 0; n < 42; ++n) cnt.fetch_add(1, std::memory_order_relaxed);
 }
@@ -32,8 +31,7 @@ main(int argc, const char *argv[])
 
     // emplace_back avoids extra copy or move operations required by
     // push_back.
-    for (int n = 0; n < 10; ++n) tv.emplace_back(incre);
-
+    for (int n = 0; n < 10; ++n) tv.emplace_back(inc);
     for (auto& t : tv) t.join();
 
     // The final value must be 420.
