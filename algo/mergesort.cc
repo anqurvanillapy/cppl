@@ -2,7 +2,7 @@
  *  Mergesort
  *  =========
  *
- *  Mergesort an array on the heap.
+ *  Mergesort an vector on the heap.
  */
 
 #include <iostream>
@@ -39,6 +39,8 @@ _sort(int low, int high, std::vector<int> *uv, std::vector<int> *tv)
 void
 mergesort(std::vector<int> *v)
 {
+    if (v == nullptr || v->size() == 0) return;
+
     int low = 0;
     int high = v->size() - 1;
     std::vector<int> *tv = new std::vector<int>(v->size());
