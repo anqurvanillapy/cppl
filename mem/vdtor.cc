@@ -29,5 +29,9 @@ main(int argc, const char *argv[])
     base *foo = new derived();
     delete foo; // base::~base() might not be triggered (UB), and derived could
                 // fail at dtor too
+
+    // Note that void pointers know nothing about dtors.
+    // void *bar = foo;
+
     return 0;
 }
