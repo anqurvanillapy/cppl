@@ -36,8 +36,10 @@ public:
     void
     add_key(K k)
     {
-        kq_.emplace_front(k);
-        kis_.emplace(k, kq_.begin());
+        kq_.emplace_back(k);
+        auto it = kq_.end();
+        if (!kq_.empty()) --it;
+        kis_.emplace(k, it);
     }
 
     void
@@ -51,18 +53,16 @@ public:
     void
     remove_last_key()
     {
-        auto it = kq_.begin();
-        kis_.erase(*it);
-        kq_.erase(it);
+        K k = kq_.front();
+        kis_.erase(k);
+        kq_.pop_front();
     }
 private:
     int f_;
     freq_node<K> *prev_;
     freq_node<K> *next_;
     // list + unordered_map = LinkedHashSet in Java.
-    std::list<K> kq_;   // emplace_front() + pop_back() for convenience of using
-                        // std::list<K>::begin()
-    // Key-iterator store.
+    std::list<K> kq_;
     std::unordered_map<K, typename std::list<K>::iterator> kis_;
 };
 
@@ -94,9 +94,9 @@ public:
     void
     inc(K k)
     {
-        kfs_.erase(k);
         auto n = kfs_[k];
         n->remove_key(k);
+        kfs_.erase(k);
 
         if (head_ == n) {
             auto temp = new freq_node<K>(n->f_ + 1, NULL, head_);
@@ -176,14 +176,14 @@ public:
             kvs_.emplace(k, v);
         } else kvs_[k] = v;
 
-        if (siz_ + 1 == capacity_) fq_.remove_last();
+        if (siz_ + 1 > capacity_) fq_.remove_last();
         else ++siz_;
     }
 private:
     unsigned siz_{0};
     unsigned capacity_;
-    std::unordered_map<K, V> kvs_;  // key-value store
-    freq<K> fq_;                    // frequency queue
+    std::unordered_map<K, V> kvs_;
+    freq<K> fq_;
 };
 
 int
@@ -198,7 +198,8 @@ main(int argc, const char *argv[])
 
     std::cout << cache.get(1) << std::endl;
 
-    // cache.set(5, 6);
+    cache.set(5, 6);
+    std::cout << cache.get(3) << std::endl;
     // std::cout << cache.get(2) << std::endl; // now {2: 3} has gone
 
     // cache.get(6);
