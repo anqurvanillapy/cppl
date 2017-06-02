@@ -50,12 +50,13 @@ public:
         kq_.erase(it);
     }
 
-    void
+    K
     remove_last_key()
     {
         K k = kq_.front();
         kis_.erase(k);
         kq_.pop_front();
+        return k;
     }
 private:
     int f_;
@@ -81,7 +82,7 @@ public:
     void
     add_last(K k)
     {
-        if (tail_ == NULL) head_ = tail_ = new freq_node<K>(1, NULL, NULL);
+        if (head_ == NULL) head_ = tail_ = new freq_node<K>(1, NULL, NULL);
         if (tail_->f_ != 1) {
             auto temp = new freq_node<K>(1, tail_, NULL);
             tail_->next_ = temp;
@@ -127,20 +128,21 @@ public:
         }
     }
 
-    void
+    K
     remove_last()
     {
-        if (tail_->kq_.size() > 1) tail_->remove_last_key();
-        else {
+        K k = tail_->remove_last_key();
+        if (tail_->kq_.empty()) {
             tail_ = tail_->prev_;
             delete tail_->next_;
             tail_->next_ = NULL;
         }
+        return k;
     }
 private:
     freq_node<K> *head_;
     freq_node<K> *tail_;
-    std::unordered_map<K, freq_node<K>*> kfs_;   // key-frequency store
+    std::unordered_map<K, freq_node<K>*> kfs_;
 };
 
 template <typename K, typename V>
@@ -161,9 +163,13 @@ public:
     V
     get(K k)
     {
-        V v = kvs_[k];
-        fq_.inc(k);
-        return v;
+        if (kvs_.find(k) == kvs_.end()) {
+            throw std::runtime_error("key not found");
+        } else {
+            V v = kvs_[k];
+            fq_.inc(k);
+            return v;
+        }
     }
 
     void
@@ -176,8 +182,10 @@ public:
             kvs_.emplace(k, v);
         } else kvs_[k] = v;
 
-        if (siz_ + 1 > capacity_) fq_.remove_last();
-        else ++siz_;
+        if (siz_ + 1 > capacity_) {
+            K k = fq_.remove_last();
+            kvs_.erase(k);
+        } else ++siz_;
     }
 private:
     unsigned siz_{0};
@@ -194,15 +202,19 @@ main(int argc, const char *argv[])
     cache.set(1, 42);
     cache.set(2, 3);
     cache.set(3, 4);
+    std::cout << "size=" << cache.size() << std::endl;
     cache.set(4, 5);
-
     std::cout << cache.get(1) << std::endl;
 
     cache.set(5, 6);
-    std::cout << cache.get(3) << std::endl;
-    // std::cout << cache.get(2) << std::endl; // now {2: 3} has gone
+    try {
+        std::cout << cache.get(2) << std::endl; // now {2: 3} has gone
+    } catch (const std::exception& e) {
+        std::cout << "key `2': " << e.what() << std::endl;
+    }
 
-    // cache.get(6);
+    // Key simply not found.
+    cache.get(6);
 
     return 0;
 }
