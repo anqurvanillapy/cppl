@@ -9,7 +9,6 @@ C/C++ Lab: Some exercise code in C/C++.
     + Design patterns
     + Memory management (e.g. smart pointers)
     + Value categories
-    + Containers
     + Generics (templates)
     + Polymorphism (virtual functions)
     + Keywords, specifiers, qualifiers, etc.
