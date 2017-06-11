@@ -14,6 +14,7 @@ C/C++ Lab: Some exercise code in C/C++.
     + Polymorphism (virtual functions)
     + Keywords, specifiers, qualifiers, etc.
     + Re-implementataions of some library functions
+    + Security, e.g. some unsafe uses of library functions
     + Misc (notes or some easy hacks)
 
 License
