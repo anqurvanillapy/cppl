@@ -5,6 +5,7 @@ C/C++ Lab: Some exercise code in C/C++.
 
 - This repo mainly covers:
     + All about synchronizations, e.g. memory order, Future
+    + Parallelism
     + Data structures & algorithms
     + Design patterns
     + Memory management (e.g. smart pointers)
