@@ -16,6 +16,7 @@ C/C++ Lab: Some exercise code in C/C++.
     + Keywords, specifiers, qualifiers, etc.
     + Re-implementataions of some library functions
     + Security, e.g. some unsafe uses of library functions
+    + Macros, for efficient use
     + Misc (notes or some easy hacks)
 
 License
