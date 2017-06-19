@@ -33,16 +33,12 @@ main(int argc, const char *argv[])
     // About 120MiB/s.
     // for (;;) fprintf(stdout, "%s", str);
 
-    // About 7.4GiB/s without flags, Geez.
+    // About 7.4GiB/s without flags, geez.
+    // Have a try: -O2 -pipe -march=native -mtune=native
     char buf[BUFSIZ];
-    int siz;
+    int i;
 
-    for (siz = 0; siz < BUFSIZ; ) {
-        buf[++siz] = str[0];
-        if (siz < BUFSIZ) buf[++siz] = str[1];
-    }
-
-    // Reaches 7.6GiB/s with -O2 -pipe -march=native -mtune=native.
+    for (i = 0; i < BUFSIZ; ++i) buf[i] = str[i%2];
     for (;;) write(1, buf, BUFSIZ);
 
     return 0;
