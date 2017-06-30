@@ -12,12 +12,11 @@ C/C++ Lab: Some exercise code in C/C++.
     + Typings
     + Value categories
     + Generics (templates)
-    + Polymorphism (virtual functions)
     + Keywords, specifiers, qualifiers, etc.
     + Re-implementataions of some library functions
     + Security, e.g. some unsafe uses of library functions
     + Macros, for efficient use
-    + Object models
+    + Object models, e.g. polymorphism
     + Misc (notes or some easy hacks)
 
 License
