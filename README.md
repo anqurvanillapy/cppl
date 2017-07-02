@@ -17,6 +17,7 @@ C/C++ Lab: Some exercise code in C/C++.
     + Security, e.g. some unsafe uses of library functions
     + Macros, for efficient use
     + Object models, e.g. polymorphism
+    + Network programming
     + Misc (notes or some easy hacks)
 
 License
