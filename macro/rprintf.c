@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 #if defined(__i386__)
-#define regprintf(reg, format, i) do {  \
+#define rprintf(reg, format, i) do {    \
 	__asm__ volatile(                   \
 		"movl %%"#reg", %0"             \
 		: "=r"(i)                       \
@@ -21,7 +21,7 @@
 	printf(format, i);                  \
 } while (0)
 #elif defined(__x86_64__)
-#define regprintf(reg, format, i) do {  \
+#define rprintf(reg, format, i) do {    \
 	__asm__ volatile(                   \
 		"movq %%"#reg", %0"             \
 		: "=r"(i)                       \
@@ -31,13 +31,13 @@
 	printf(format, i);                  \
 } while (0)
 #else
-#error "regprintf not supported on this platform"
+#error "rprintf not supported on this platform"
 #endif
 
 int
 main()
 {
 	unsigned long i = 42;
-	regprintf(rsp, "0x%lx\n", i);   // 64-bit stack pointer
+	rprintf(rsp, "0x%lx\n", i); // 64-bit stack pointer
 	return 0;
 }
