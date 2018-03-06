@@ -2,8 +2,10 @@
  *  Blocks
  *  ======
  *
+ *  Lambda-expression-like syntax to create closures in C.
+ *
  *  Note: libblocksruntime-dev is required.  Use clang to compile with arguments
- *  -fblocks -lBlockRuntime
+ *  -fblocks -lBlockRuntime.
  */
 
 #include <stdio.h>
