@@ -19,6 +19,7 @@ C/C++ Lab: Some exercise code in C/C++.
     + Object models, e.g. polymorphism
     + Network programming
     + Optimization
+    + Compiler extensions
     + Misc (notes or some easy hacks)
 
 License
