@@ -2,7 +2,7 @@
  *  my_shared_ptr
  *  =============
  *
- *  A simple implementation of non-thread-safe shared_ptr<T>.
+ *  A simple implementation of non-thread-safe std::shared_ptr<T>.
  */
 
 #include <utility>
@@ -24,19 +24,19 @@ public:
 
 	~refcnt() = default;
 
-	void
+	inline void
 	inc()
 	{
 		++cnt_;
 	}
 
-	int
+	inline int
 	dec()
 	{
 		return --cnt_;
 	}
 
-	int
+	inline int
 	count() const
 	{
 		return cnt_;
@@ -88,7 +88,7 @@ public:
 	}
 
 	my_shared_ptr<T>&
-	operator=(my_shared_ptr<T>&& rhs) noexcept
+	operator=(my_shared_ptr<T>&& rhs)
 	{
 		if (this != &rhs) {
 			if (cnt_.dec() == 0 && t_ != nullptr) {
@@ -103,12 +103,12 @@ public:
 		return *this;
 	}
 
-	my_shared_ptr(my_shared_ptr&& rhs) noexcept
+	my_shared_ptr(my_shared_ptr&& rhs)
 	{
 		operator=(rhs);
 	}
 
-	int
+	inline int
 	count() const
 	{
 		return cnt_.count();
