@@ -1,5 +1,5 @@
 /**
- *  dyncall example
+ *  dyncall pthread
  *  ===============
  *
  *  An example of using dyncall to call pthread_create and pthread_join, for
@@ -24,7 +24,7 @@ foo(const char* str)
 int
 main()
 {
-	int rc;
+	int rc, retval;
 	pthread_t t;
 
 	DCCallVM* vm = dcNewCallVM(4096);
@@ -40,9 +40,10 @@ main()
 
 	dcReset(vm);
 	dcArgLong(vm, t);
-	dcArgPointer(vm, NULL);
+	dcArgPointer(vm, (DCpointer)&retval);
 	rc = dcCallInt(vm, (DCpointer)&pthread_join);
 	assert(rc == 0);
+	assert(retval == 42);
 
 	return 0;
 }
