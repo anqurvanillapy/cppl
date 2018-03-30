@@ -16,49 +16,10 @@
 
 #define SIZ (1024 * 1024 * 128)
 
+#if defined(TEST_64)
+
 void
 mymemcpy(void* dst, const void* src, size_t n)
-{
-	size_t i;
-	unsigned char* d = (unsigned char*)dst;
-	unsigned char* s = (unsigned char*)src;
-	for (i = 0; i < n; ++i) {
-		*d++ = *s++;
-	}
-}
-
-void
-mymemcpy32(void* dst, const void* src, size_t n)
-{
-	unsigned char* bd = (unsigned char*)dst;
-	unsigned char* bs = (unsigned char*)src;
-
-	while (((size_t)bd & 0x3) != 0) {
-		*bd++ = *bs++;
-		--n;
-	}
-
-	unsigned int* ld = (unsigned int*)dst;
-	unsigned int* ls = (unsigned int*)src;
-
-	while (n >= 4) {
-		*ld++ = *ls++;
-		n -= 4;
-	}
-
-	if (n) {
-		bd = (unsigned char*)ld;
-		bs = (unsigned char*)ls;
-
-		while (n) {
-			*bd++ = *bs++;
-			--n;
-		}
-	}
-}
-
-void
-mymemcpy64(void* dst, const void* src, size_t n)
 {
 	unsigned char* bd = (unsigned char*)dst;
 	unsigned char* bs = (unsigned char*)src;
@@ -87,6 +48,53 @@ mymemcpy64(void* dst, const void* src, size_t n)
 	}
 }
 
+#elif defined(TEST_32)
+
+void
+mymemcpy(void* dst, const void* src, size_t n)
+{
+	unsigned char* bd = (unsigned char*)dst;
+	unsigned char* bs = (unsigned char*)src;
+
+	while (((size_t)bd & 0x3) != 0) {
+		*bd++ = *bs++;
+		--n;
+	}
+
+	unsigned int* ld = (unsigned int*)dst;
+	unsigned int* ls = (unsigned int*)src;
+
+	while (n >= 4) {
+		*ld++ = *ls++;
+		n -= 4;
+	}
+
+	if (n) {
+		bd = (unsigned char*)ld;
+		bs = (unsigned char*)ls;
+
+		while (n) {
+			*bd++ = *bs++;
+			--n;
+		}
+	}
+}
+
+#else
+
+void
+mymemcpy(void* dst, const void* src, size_t n)
+{
+	size_t i;
+	unsigned char* d = (unsigned char*)dst;
+	unsigned char* s = (unsigned char*)src;
+	for (i = 0; i < n; ++i) {
+		*d++ = *s++;
+	}
+}
+
+#endif /* TEST_64 */
+
 int
 main()
 {
@@ -100,14 +108,8 @@ main()
 	aa[SIZ - 1] = 'a';
 	bb = (char*)b;
 
-#if defined(TEST_64)
-	mymemcpy64(b, a, SIZ);
-#elif defined(TEST_32)
-	mymemcpy32(b, a, SIZ);
-#else
 	mymemcpy(b, a, SIZ);
-#endif /* TEST_64 */
-
 	assert(bb[SIZ - 1] == 'a');
+
 	return 0;
 }
