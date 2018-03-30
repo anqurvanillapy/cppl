@@ -16,11 +16,10 @@
 
 #define SIZ (1024 * 1024 * 128)
 
-#if defined(TEST_64)
-
 void
 mymemcpy(void* dst, const void* src, size_t n)
 {
+#if defined(TEST_64)
 	unsigned char* bd = (unsigned char*)dst;
 	unsigned char* bs = (unsigned char*)src;
 
@@ -46,13 +45,7 @@ mymemcpy(void* dst, const void* src, size_t n)
 			--n;
 		}
 	}
-}
-
 #elif defined(TEST_32)
-
-void
-mymemcpy(void* dst, const void* src, size_t n)
-{
 	unsigned char* bd = (unsigned char*)dst;
 	unsigned char* bs = (unsigned char*)src;
 
@@ -78,22 +71,15 @@ mymemcpy(void* dst, const void* src, size_t n)
 			--n;
 		}
 	}
-}
-
 #else
-
-void
-mymemcpy(void* dst, const void* src, size_t n)
-{
 	size_t i;
 	unsigned char* d = (unsigned char*)dst;
 	unsigned char* s = (unsigned char*)src;
 	for (i = 0; i < n; ++i) {
 		*d++ = *s++;
 	}
-}
-
 #endif /* TEST_64 */
+}
 
 int
 main()
