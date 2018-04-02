@@ -12,20 +12,15 @@
 
 int i = 0;
 
-template <typename T>
-class pure_io {
-public:
-	constexpr static int
-	foo()
-	{
-		return 42;
-	}
-private:
-	constexpr static T v_ = foo();
-};
+void __attribute__((const))
+foo()
+{
+	++i;
+}
 
 int
 main()
 {
+	assert(i == 0);
 	return 0;
 }
