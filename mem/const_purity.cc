@@ -17,7 +17,7 @@ template <typename T>
 class pure_io {
 public:
 	constexpr void
-	run() const __attribute__((const))
+	run() const noexcept __attribute__((const))
 	{
 		static_cast<const T*>(this)->run_impl();
 	}
