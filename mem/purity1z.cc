@@ -9,11 +9,10 @@
 
 #include <tuple>
 
-template <typename T, typename ...Args>
 class pure_io {
 public:
-	template <T F()>
-	static constexpr T
+	template <auto F()>
+	static constexpr auto
 	fapply() noexcept
 	{
 		static_assert(noexcept(F()), "constant function required");
@@ -22,14 +21,14 @@ public:
 	}
 
 	template <typename F, typename G>
-	static constexpr T
+	static constexpr auto
 	lapply(F f, G g) noexcept
 	{
+		static_assert(noexcept(g()), "no-param lambda required at arg#1");
 		constexpr auto ret = f(g());
 		return ret;
 	}
 };
-
 
 template <auto N>
 constexpr auto
@@ -55,9 +54,9 @@ baz()
 int
 main()
 {
-	constexpr auto n0 = pure_io<int>::fapply<bar<0, 42>>();
+	constexpr auto n0 = pure_io::fapply<bar<0, 42>>();
 	static_assert(n0 == 84, "foo bar oops");
-	static_assert(pure_io<int>::fapply<baz<n0>>() == 85, "baz oops");
+	static_assert(pure_io::fapply<baz<n0>>() == 85, "baz oops");
 
 	auto f_vals = [] {
 		return std::make_tuple(0, 42);
@@ -66,7 +65,7 @@ main()
 		return std::make_tuple(std::get<1>(args),
 							   std::get<0>(args));
 	};
-	constexpr auto n1 = pure_io<std::tuple<int, int>>::lapply(f_swap, f_vals);
+	constexpr auto n1 = pure_io::lapply(f_swap, f_vals);
 	static_assert(std::get<0>(n1) == 42 && std::get<1>(n1) == 0,
 				  "lambda oops");
 
