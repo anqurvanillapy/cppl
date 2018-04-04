@@ -8,20 +8,16 @@
  */
 
 #include <tuple>
-#include <cassert>
-
-int i = 0;
-
 
 template <typename T, typename ...Args>
 class pure_io {
 public:
-	template <T F(const Args&...)>
+	template <T F()>
 	static constexpr T
-	apply(const Args&... args) noexcept
+	fapply() noexcept
 	{
-		static_assert(noexcept(F(args...)), "constant function required");
-		constexpr auto ret = F(args...);
+		static_assert(noexcept(F()), "constant function required");
+		constexpr auto ret = F();
 		return ret;
 	}
 
@@ -34,27 +30,44 @@ public:
 	}
 };
 
-template <auto X, auto Y>
+
+template <auto N>
 constexpr auto
 foo()
 {
-	return X + Y;
+	return N * 2;
+}
+
+template <auto X, auto Y>
+constexpr auto
+bar()
+{
+	return foo<X + Y>();
+}
+
+template <auto N>
+constexpr auto
+baz()
+{
+	return N + 1;
 }
 
 int
 main()
 {
-	static_assert(pure_io<int>::apply<foo<0, 42>>() == 42, "function oops");
+	constexpr auto n0 = pure_io<int>::fapply<bar<0, 42>>();
+	static_assert(n0 == 84, "foo bar oops");
+	static_assert(pure_io<int>::fapply<baz<n0>>() == 85, "baz oops");
 
 	auto f_vals = [] {
 		return std::make_tuple(0, 42);
 	};
-	auto f_swap = [](std::tuple<int, int> args) {
+	auto f_swap = [](auto args) {
 		return std::make_tuple(std::get<1>(args),
 							   std::get<0>(args));
 	};
-	constexpr auto res = pure_io<std::tuple<int, int>>::lapply(f_swap, f_vals);
-	static_assert(std::get<0>(res) == 42 && std::get<1>(res) == 0,
+	constexpr auto n1 = pure_io<std::tuple<int, int>>::lapply(f_swap, f_vals);
+	static_assert(std::get<0>(n1) == 42 && std::get<1>(n1) == 0,
 				  "lambda oops");
 
 	return 0;
