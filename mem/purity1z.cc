@@ -17,7 +17,8 @@ fapply() noexcept
 {
 	static_assert(noexcept(F()), "constant function required");
 
-	if constexpr (!std::is_same<decltype(F()), void>::value) { constexpr auto ret = F();
+	if constexpr (!std::is_same<decltype(F()), void>::value) {
+		constexpr auto ret = F();
 		return ret;
 	}
 
