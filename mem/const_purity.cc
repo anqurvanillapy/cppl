@@ -29,6 +29,8 @@ public:
 	run_impl() const
 	{
 		++i;
+		// `i' may be a local copy here.
+		assert(i == 1);
 	}
 };
 
