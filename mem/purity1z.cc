@@ -16,13 +16,7 @@ static constexpr auto
 fapply() noexcept
 {
 	static_assert(noexcept(F()), "constant function required");
-
-	if constexpr (!std::is_same<decltype(F()), void>::value) {
-		constexpr auto ret = F();
-		return ret;
-	}
-
-	F();
+	return F();
 }
 
 template <auto F()>
@@ -40,21 +34,9 @@ lapply(F f, G g) noexcept
 
 	// `else' branch cannot be omitted with `constexpr'.
 	if constexpr (std::is_same<decltype(g()), void>::value) {
-		if constexpr (std::is_same<decltype(f()), void>::value) {
-			f();
-			return;
-		} else {
-			constexpr auto ret = f();
-			return ret;
-		}
+		return f();
 	} else {
-		if constexpr (std::is_same<decltype(f(g())), void>::value) {
-			f(g());
-			return;
-		}
-
-		constexpr auto ret = f(g());
-		return ret;
+		return f(g());
 	}
 }
 
