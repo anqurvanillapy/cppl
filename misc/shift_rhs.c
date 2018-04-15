@@ -1,3 +1,11 @@
+/**
+ *  Right-hand side of shift
+ *  ========================
+ *
+ *  Literals and expressions are treated differently on the right-hand side of
+ *  the shift operator.
+ */
+
 #include <assert.h>
 
 int
