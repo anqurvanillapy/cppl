@@ -20,6 +20,7 @@ C/C++ Lab: Some exercise code in C/C++.
     + Network programming
     + Optimization
     + Compiler extensions
+    + Utility functions
     + Misc (notes or some easy hacks)
 
 License
