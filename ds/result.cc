@@ -24,19 +24,16 @@ public:
 	result(result<T, E>&&)                  = delete;
 	result& operator=(result<T, E>&&)       = delete;
 
-	template <bool Ok = true>
-	explicit constexpr result(const std::enable_if_t<Ok, T>& v)
+	explicit constexpr result(const T& v)
 		: v_{v}
-		, ok_{Ok}
+		, ok_{true}
 	{
 		/* nop */
 	}
 
-	template <bool Ok = false>
-	explicit constexpr result(const std::enable_if_t<!Ok, E>& e,
-							  const std::nullopt_t&)
+	explicit constexpr result(const E& e, const std::nullopt_t&)
 		: v_{e}
-		, ok_{Ok}
+		, ok_{false}
 	{
 		/* nop */
 	}
@@ -180,7 +177,15 @@ main()
 	assert(ea.unwrap() == 44);
 	assert(eb.unwrap_err() == 40);
 
-	match(e)(
+	auto g = ok<int, int>(42);
+	auto h = err<int, int>(42);
+
+	match(g) (
+		[] (int v) { std::cout << v + v << std::endl; },
+		[] (int v) { std::cout << v - v << std::endl; }
+	);
+
+	match(h) (
 		[] (int v) { std::cout << v + v << std::endl; },
 		[] (int v) { std::cout << v - v << std::endl; }
 	);
