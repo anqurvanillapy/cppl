@@ -1,8 +1,8 @@
 /**
- *  echo
- *  ====
+ *  myecho
+ *  ======
  *
- *  The `echo` command.
+ *  Namely the `echo` command, inspired by the OpenBSD's one.
  */
 
 #include <stdio.h>
