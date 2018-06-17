@@ -2,11 +2,12 @@
  *  Multiplicative hashing
  *  ======================
  *
- *  Based on the golden ratio, so A.K.A. Fibonacci hashing.  Simple, fast, but
- *  frequent to collide.
+ *  Based on the golden ratio, hence A.K.A. Fibonacci hashing.  Simple, fast,
+ *  but not well evenly-distributed.
  */
 
 #include <iostream>
+#include <array>
 
 uint32_t
 mulhash32(uint32_t h, int shift)
@@ -20,29 +21,39 @@ mulhash64(uint64_t h, int shift)
 	return (h * 11400714819323198485llu) >> shift;
 }
 
+#define LEN 8
+#define N 64
+
+template <typename T>
+void
+debug(std::array<T, LEN> arr)
+{
+	if constexpr (std::is_same_v<T, uint32_t>) {
+		std::cout << "mulhash32=";
+	} else {
+		std::cout << "mulhash64=";
+	}
+
+	std::cout << "[";
+	for (const auto& a : arr) {
+		std::cout << a << ",";
+	}
+	std::cout << "\b]" << std::endl;
+}
+
 int
 main()
 {
 	int shift = 64 - 3;
+	std::array<uint32_t, LEN> arr32{};
+	std::array<uint64_t, LEN> arr64{};
 
 	// Naively check the distribution.
-	std::cout << mulhash32(0, shift) << std::endl;
-	std::cout << mulhash32(1, shift) << std::endl;
-	std::cout << mulhash32(2, shift) << std::endl;
-	std::cout << mulhash32(3, shift) << std::endl;
-	std::cout << mulhash32(4, shift) << std::endl;
-	std::cout << mulhash32(5, shift) << std::endl;
-	std::cout << mulhash32(6, shift) << std::endl;
-	std::cout << mulhash32(7, shift) << std::endl;
-	std::cout << "---" << std::endl;
-	std::cout << mulhash64(0, shift) << std::endl;
-	std::cout << mulhash64(1, shift) << std::endl;
-	std::cout << mulhash64(2, shift) << std::endl;
-	std::cout << mulhash64(3, shift) << std::endl;
-	std::cout << mulhash64(4, shift) << std::endl;
-	std::cout << mulhash64(5, shift) << std::endl;
-	std::cout << mulhash64(6, shift) << std::endl;
-	std::cout << mulhash64(7, shift) << std::endl;
+
+	for (int i = 0; i < N; ++i) ++arr32[mulhash32(i, shift)];
+	debug(arr32);
+	for (int i = 0; i < N; ++i) ++arr64[mulhash64(i, shift)];
+	debug(arr64);
 
 	return 0;
 }
