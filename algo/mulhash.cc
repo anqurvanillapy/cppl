@@ -4,6 +4,8 @@
  *
  *  Based on the golden ratio, hence A.K.A. Fibonacci hashing.  Simple, fast,
  *  but not well evenly-distributed.
+ *
+ *  Note: Compile with -std=c++17.
  */
 
 #include <iostream>
@@ -35,24 +37,21 @@ debug(std::array<T, LEN> arr)
 	}
 
 	std::cout << "[";
-	for (const auto& a : arr) {
-		std::cout << a << ",";
-	}
+	for (const auto& a : arr) std::cout << a << ",";
 	std::cout << "\b]" << std::endl;
 }
 
 int
 main()
 {
-	int shift = 64 - 3;
 	std::array<uint32_t, LEN> arr32{};
 	std::array<uint64_t, LEN> arr64{};
 
 	// Naively check the distribution.
 
-	for (int i = 0; i < N; ++i) ++arr32[mulhash32(i, shift)];
+	for (int i = 0; i < N; ++i) ++arr32[mulhash32(i, 32 - 3)];
 	debug(arr32);
-	for (int i = 0; i < N; ++i) ++arr64[mulhash64(i, shift)];
+	for (int i = 0; i < N; ++i) ++arr64[mulhash64(i, 64 - 3)];
 	debug(arr64);
 
 	return 0;
