@@ -22,6 +22,7 @@ C/C++ Lab: Some exercise code in C/C++.
     + Compiler extensions
     + Utility functions
     + Debugging methods
+    + Defects (not original)
     + Misc (notes or some easy hacks)
 
 License
