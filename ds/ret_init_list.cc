@@ -16,25 +16,25 @@
 std::array<int, 3>
 foo()
 {
-    return { 1, 2, 3 };
+	return { 1, 2, 3 };
 }
 
 std::array<int, 3>
 bar()
 {
-    return std::array<int, 3>{ 1, 2, 3 };
+	return std::array<int, 3>{ 1, 2, 3 };
 }
 
 int
-main(int argc, const char *argv[])
+main()
 {
-    auto a = foo();
-    auto b = bar();
-    std::array<int, 3> c = { 1, 2, 3 };
+	auto a = foo();
+	auto b = bar();
+	std::array<int, 3> c = { 1, 2, 3 };
 
-    std::cout << a.size() << std::endl;
-    std::cout << b.size() << std::endl;
-    std::cout << c.size() << std::endl;
+	std::cout << a.size() << std::endl;
+	std::cout << b.size() << std::endl;
+	std::cout << c.size() << std::endl;
 
-    return 0;
+	return 0;
 }
