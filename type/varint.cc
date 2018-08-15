@@ -37,8 +37,8 @@ _encode_varu64(char* b, uint64_t v)
 	static const unsigned int B = 128;
 	unsigned char* p = reinterpret_cast<unsigned char*>(b);
 	while (v >= B) {
-	*(p++) = (v & (B - 1)) | B;
-	v >>= 7;
+		*(p++) = (v & (B - 1)) | B;
+		v >>= 7;
 	}
 	*(p++) = static_cast<unsigned char>(v);
 	return reinterpret_cast<char*>(p);
@@ -49,15 +49,15 @@ _getptr_varu64(const char* p, const char* limit, uint64_t* v)
 {
 	uint64_t ret = 0;
 	for (uint32_t shift = 0; shift <= 63 && p < limit; shift += 7) {
-	uint64_t b = *(reinterpret_cast<const unsigned char*>(p));
-	++p;
-	if (b & 128) {
-	    ret |= ((b & 127) << shift);
-	} else {
-	    ret |= (b << shift);
-	    *v = ret;
-	    return reinterpret_cast<const char*>(p);
-	}
+		uint64_t b = *(reinterpret_cast<const unsigned char*>(p));
+		++p;
+		if (b & 128) {
+			ret |= ((b & 127) << shift);
+		} else {
+			ret |= (b << shift);
+			*v = ret;
+			return reinterpret_cast<const char*>(p);
+		}
 	}
 	return nullptr;
 }
@@ -88,8 +88,8 @@ get_varu64(std::string& s, uint64_t* v)
 	const char* limit = p + s.size();
 	const char* q = _getptr_varu64(p, limit, v);
 	if (q) {
-	s = std::string(q, narrow_cast<size_t>(limit - q));
-	return true;
+		s = std::string(q, narrow_cast<size_t>(limit - q));
+		return true;
 	}
 	return false;
 }
@@ -109,8 +109,8 @@ get_vari64(std::string& s, int64_t* v)
 	const char* limit = p + s.size();
 	const char* q = _getptr_vari64(p, limit, v);
 	if (q) {
-	s = std::string(q, narrow_cast<size_t>(limit - q));
-	return true;
+		s = std::string(q, narrow_cast<size_t>(limit - q));
+		return true;
 	}
 	return false;
 }
