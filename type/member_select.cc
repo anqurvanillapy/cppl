@@ -14,7 +14,7 @@ enum class cmd_t : uint32_t {
     B,
 };
 
-// NOTE: 4 options => 4! (=24) specialized templates.
+// NOTE: 4 options => 2^4 (=16) specialized templates.
 
 enum class opt_t : uint32_t {
     None,
