@@ -2,7 +2,7 @@
  *  Member selection
  *  ================
  *
- *  Member variables declared like a bitset.
+ *  Member variables declared like a bitset.  F**k you SFINAE.
  *
  *  Note: Compile with -std=c++17.
  */
@@ -12,13 +12,14 @@
 enum class cmd_t : uint32_t {
     A,
     B,
-    C,
 };
 
+// NOTE: 4 options => 4! (=24) specialized templates.
+
 enum class opt_t : uint32_t {
-    A,
-    B,
-    C,
+    None,
+    A = 1,
+    B = 1 << 1,
 };
 
 constexpr uint32_t opt_v(opt_t opt) {
@@ -38,8 +39,8 @@ struct cmd_trait {
     static constexpr auto opts = opt_t::None;
 };
 
-template <cmd_t Cmd> constexpr bool has_opt(opt_t opt) {
-    return static_cast<bool>(opt_v(opt & cmd_trait<Cmd>::opts));
+template <cmd_t Cmd> constexpr bool is_opt(opt_t opt) {
+    return opt == cmd_trait<Cmd>::opts;
 }
 
 template <>
@@ -52,37 +53,26 @@ struct cmd_trait<cmd_t::B> {
     static constexpr auto opts = opt_t::A | opt_t::B;
 };
 
-template <>
-struct cmd_trait<cmd_t::C> {
-    static constexpr auto opts = opt_t::A | opt_t::B | opt_t::C;
-};
-
 template <cmd_t Cmd, typename = void>
 struct val_t {
     int A;
     int B;
-    int C;
 };
 
 template <cmd_t Cmd>
-struct val_t<Cmd, std::enable_if_t<!has_opt<Cmd>(opt_t::A)>> {
-
-    int B;
-    int C;
-};
-
-template <cmd_t Cmd>
-struct val_t<Cmd, std::enable_if_t<!has_opt<Cmd>(opt_t::B)>> {
+struct val_t<Cmd, std::enable_if_t<is_opt<Cmd>(opt_t::A)>> {
     int A;
-
-    int C;
 };
 
 template <cmd_t Cmd>
-struct val_t<Cmd, std::enable_if_t<!has_opt<Cmd>(opt_t::C)>> {
+struct val_t<Cmd, std::enable_if_t<is_opt<Cmd>(opt_t::B)>> {
+    int B;
+};
+
+template <cmd_t Cmd>
+struct val_t<Cmd, std::enable_if_t<is_opt<Cmd>(opt_t::A | opt_t::B)>> {
     int A;
     int B;
-
 };
 
 int main()
@@ -90,7 +80,6 @@ int main()
     val_t<cmd_t::A> val;
     val.A = 42;
     // val.B = 69; // member not found
-    // val.C = 666;
     std::cout << val.A << std::endl;
     return 0;
 }
