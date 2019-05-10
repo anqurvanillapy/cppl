@@ -16,7 +16,6 @@ enum class cmd_t : uint32_t {
 };
 
 enum class opt_t : uint32_t {
-    None,
     A,
     B,
     C,
