@@ -54,10 +54,7 @@ struct cmd_trait<cmd_t::B> {
 };
 
 template <cmd_t Cmd, typename = void>
-struct val_t {
-    int A;
-    int B;
-};
+struct val_t {};
 
 template <cmd_t Cmd>
 struct val_t<Cmd, std::enable_if_t<is_opt<Cmd>(opt_t::A)>> {
