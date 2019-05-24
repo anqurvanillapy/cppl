@@ -7,10 +7,14 @@
 
 #include <iostream>
 
-using Color = enum class Color : int {
-    Red,
-    Green,
-    Blue,
+struct Color {
+    using ColorType = enum class ColorType : int {
+        Red,
+        Green,
+        Blue,
+    };
+
+    int ColorValue;
 };
 
 using X = struct {
@@ -20,8 +24,8 @@ using X = struct {
 int main()
 {
     Color c;
-    c = Color::Blue;
-    std::cout << static_cast<int>(c) << std::endl;
+    c.ColorValue = static_cast<int>(Color::ColorType::Blue);
+    std::cout << c.ColorValue << std::endl;
 
     X x;
     x.A = 42;
