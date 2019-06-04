@@ -33,5 +33,14 @@ int main()
     s2.insert(b);
     std::cout << s2.size() << std::endl;
 
+    std::set<
+        std::shared_ptr<X>,
+        std::owner_less<std::shared_ptr<X>>
+    > s3;
+    s3.insert(a);
+    std::cout << s3.size() << std::endl;
+    s3.insert(a);
+    std::cout << s3.size() << std::endl;
+
     return 0;
 }
