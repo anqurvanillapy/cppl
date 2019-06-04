@@ -8,10 +8,23 @@
 #include <iostream>
 #include <memory>
 
+struct Good;
+
+void foo(std::shared_ptr<Good> a)
+{
+    (void)a;
+    std::cout << "foo()\n";
+}
+
 struct Good : public std::enable_shared_from_this<Good> {
     std::shared_ptr<Good> getptr()
     {
         return shared_from_this();
+    }
+
+    void call_foo()
+    {
+        foo(shared_from_this());
     }
 };
 
@@ -26,6 +39,9 @@ struct Bad {
 
 int main()
 {
+    std::shared_ptr<Good> p0 = std::make_shared<Good>();
+    p0->call_foo();
+
     std::shared_ptr<Good> p1 = std::make_shared<Good>();
     std::shared_ptr<Good> p2 = p1->getptr();
     std::cout << "p2.use_count()=" << p2.use_count() << std::endl;
