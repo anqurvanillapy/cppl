@@ -1,9 +1,14 @@
-# VSCode
-.vscode
+.vscode/
 
-#### joe made this: http://goel.io/joe
+# Assembly
+*.s
 
-#####=== C++ ===#####
+# Created by https://www.gitignore.io/api/c++
+# Edit at https://www.gitignore.io/?templates=c++
+
+### C++ ###
+# Prerequisites
+*.d
 
 # Compiled Object files
 *.slo
@@ -22,6 +27,7 @@
 
 # Fortran module files
 *.mod
+*.smod
 
 # Compiled Static libraries
 *.lai
@@ -34,3 +40,4 @@
 *.out
 *.app
 
+# End of https://www.gitignore.io/api/c++
