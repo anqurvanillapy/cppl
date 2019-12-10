@@ -55,8 +55,7 @@ class Context final {
             return {};
         }
         const auto &fn = g_stk.back();
-        T ret = fn(arg);
-        return ret;
+        return fn(arg);
     }
 
   private:
