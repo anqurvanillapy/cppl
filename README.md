@@ -24,6 +24,7 @@ C/C++ Lab: Some exercise code in C/C++.
     + Debugging methods
     + Defects (not original)
     + Reflections
+    + Theorem proving...? idk
     + Misc (notes or some easy hacks)
 
 License
