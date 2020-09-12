@@ -78,7 +78,7 @@ Just use the `print`/`p` command.
 
 Sometimes we can totally forget what the function is doing, or we don't have the
 access to the source code, or the symbols are stripped.  For instance, we have
-no idea there is a null pointer deference in the function `main`.  In this
+no idea there is a null pointer dereference in the function `main`.  In this
 scenerio, we should observe the behavior of the function.
 
 Strip it, without mercy.
