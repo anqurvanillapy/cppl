@@ -68,7 +68,7 @@ int main()
 }
 ```
 
-But why?  Why does the assignment is fatal?  We need to know the content of `p`.
+But why?  Why is the assignment fatal?  We need to know the content of `p`.
 Just use the `print`/`p` command.
 
 ```
