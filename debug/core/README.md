@@ -76,9 +76,9 @@ Just use the `print`/`p` command.
 (char *) $0 = 0x0000000000000000 <no value available>
 ```
 
-Sometimes we can totally forget what the function is doing, like we don't have
-the access to the source code, or the symbols are stripped.  For instance, we
-have no idea there is a null pointer deference in the function `main`.  In this
+Sometimes we can totally forget what the function is doing, or we don't have the
+access to the source code, or the symbols are stripped.  For instance, we have
+no idea there is a null pointer deference in the function `main`.  In this
 scenerio, we should observe the behavior of the function.
 
 Strip it, without mercy.
