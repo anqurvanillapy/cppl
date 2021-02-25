@@ -12,7 +12,7 @@
 #define 𝓒 typename
 
 template <𝓒> struct Applicative {
-  template <𝓒 𝕏, 𝓒 𝕐> static Applicative<𝕐(𝕏)> Pure(std::function<𝕐(𝕏)> x);
+  template <𝓒 𝕏> static Applicative<𝕏> Pure(𝕏 x);
 
   template <𝓒 𝕏, 𝓒 𝕐>
   static Applicative<𝕐> Seq(Applicative<𝕏> a, Applicative<𝕐(𝕏)> f);
