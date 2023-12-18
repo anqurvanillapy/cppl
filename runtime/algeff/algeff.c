@@ -35,6 +35,10 @@ static void Context·push(struct Context *ctx, union Handler h) {
   }
 }
 
+static union Handler *Context·handler(struct Context *ctx, int evID) {
+  return &ctx->handlers[evID];
+}
+
 static union Handler Context·pop(struct Context *ctx) {
   if (ctx->handlerCount == 0) {
     printf("pop error: handlers overflow");
@@ -45,6 +49,11 @@ static union Handler Context·pop(struct Context *ctx) {
 }
 
 static bool Context·isYielding(struct Context *ctx) { return ctx->isYielding; }
+
+static enum Unit perform·ask(struct Context *ctx, int evID,
+                             enum Unit (*next)(struct Context *ctx, int n)) {
+  return Context·handler(ctx, evID)->reader.ask(ctx, next);
+}
 
 /*
 effect reader
@@ -61,16 +70,8 @@ fun main()
   // 69
 */
 
-static enum Unit perform·ask(struct Context *ctx, int evID,
-                             enum Unit (*next)(struct Context *ctx, int n));
 static enum Unit main·k0(struct Context *ctx);
 static enum Unit main·k1(struct Context *ctx, int n);
-
-static enum Unit perform·ask(struct Context *ctx, int evID,
-                             enum Unit (*next)(struct Context *ctx, int n)) {
-  union Handler *handler = &ctx->handlers[evID];
-  return handler->reader.ask(ctx, next);
-}
 
 static enum Unit main·k0(struct Context *ctx) {
   return perform·ask(ctx, 0, main·k1);
