@@ -1,10 +1,6 @@
+.DS_Store
+.idea/
 .vscode/
-
-# Assembly
-*.s
-
-# Created by https://www.gitignore.io/api/c++
-# Edit at https://www.gitignore.io/?templates=c++
 
 ### C++ ###
 # Prerequisites
@@ -40,4 +36,35 @@
 *.out
 *.app
 
-# End of https://www.gitignore.io/api/c++
+### C ###
+# Object files
+*.ko
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Shared objects (inc. Windows DLLs)
+*.so.*
+
+# Executables
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
