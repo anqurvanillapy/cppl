@@ -16,6 +16,7 @@ a.out: algeff.c
 		-Wnull-dereference \
 		-Wdouble-promotion \
 		-Wformat=2 \
+		-fsanitize=address \
 		-O0 \
 		-g3 \
 		-o $@ \

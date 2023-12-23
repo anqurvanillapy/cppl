@@ -1,112 +1,143 @@
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 
-enum Unit { TT };
+enum unit { tt };
 
-struct Context;
+struct context;
+struct runnable;
 
-struct Handler·Reader {
-  enum Unit (*ask)(struct Context *ctx,
-                   enum Unit (*next)(struct Context *ctx, int n));
+struct args·main·r0 {
+  int argc;
 };
 
-union Handler {
-  struct Handler·Reader reader;
+struct args·main·r1 {
+  int n;
 };
 
-struct Context {
-  bool isYielding;
-  size_t handlerCount;
-  union Handler handlers[16];
+union args {
+  enum unit ask;
+  struct args·main·r0 main·r0;
+  struct args·main·r1 main·r1;
 };
 
-static void Context·init(struct Context *ctx) {
-  ctx->isYielding = false;
-  ctx->handlerCount = 0;
+union ret {
+  enum unit main;
+};
+
+struct runnable {
+  union args args;
+  union ret (*cb)(struct context *ctx, union args args);
+};
+
+struct context {
+  int to;
+  struct runnable *handler;
+  struct runnable runnables[16];
+  size_t count;
+};
+
+static void context·init(struct context *ctx) {
+  ctx->to = -1;
+  ctx->count = 0;
 }
 
-static void Context·push(struct Context *ctx, union Handler h) {
-  ctx->handlers[ctx->handlerCount] = h;
-  ctx->handlerCount++;
-  if (ctx->handlerCount > sizeof(ctx->handlers) / sizeof(ctx->handlers[0])) {
-    printf("push error: handlers overflow\n");
-    exit(1);
+static void context·push(struct context *ctx, struct runnable f) {
+  assert(ctx->count < sizeof(ctx->runnables) / sizeof(struct runnable));
+  ctx->runnables[ctx->count] = f;
+  ctx->count++;
+}
+
+static void context·yield(struct context *ctx, int to, union args args) {
+  ctx->to = to;
+  ctx->handler = NULL;
+  ctx->runnables[ctx->to].args = args;
+}
+
+static union ret main·ask·r0(struct context *ctx, union args args);
+static union ret main·ask·r1(struct context *ctx, union args args);
+static union ret main·r0(struct context *ctx, union args args);
+static union ret main·r1(struct context *ctx, union args args);
+
+static union ret main·ask·r0(struct context *ctx, union args args) {
+  (void)args;
+  context·push(ctx, (struct runnable){.cb = main·ask·r1});
+  context·yield(ctx, 2, (union args){.main·r1 = {42}});
+  ctx->handler = &ctx->runnables[3];
+  return (union ret){.main = tt};
+}
+
+static union ret main·ask·r1(struct context *ctx, union args args) {
+  (void)args;
+  context·yield(ctx, 2, (union args){.main·r1 = {69}});
+  ctx->handler = NULL;
+  return (union ret){.main = tt};
+}
+
+static union ret schedule·reader(struct context *ctx, struct runnable handler,
+                                 struct runnable expr, union args args) {
+  context·push(ctx, handler);
+  context·push(ctx, expr);
+  context·yield(ctx, 1, args);
+  union ret ret;
+  while (true) {
+    struct runnable *r;
+    if (ctx->handler && ctx->to < 0) {
+      r = ctx->handler;
+    } else if (ctx->to >= 0) {
+      r = &ctx->runnables[ctx->to];
+    } else {
+      break;
+    }
+    ret = r->cb(ctx, r->args);
   }
+  return ret;
 }
 
-static union Handler *Context·handler(struct Context *ctx, int evID) {
-  return &ctx->handlers[evID];
+static int ask(struct context *ctx, struct runnable *handler) {
+  ctx->handler = handler;
+  context·yield(ctx, 0, (union args){.ask = tt});
+  return 0;
 }
 
-static union Handler Context·pop(struct Context *ctx) {
-  if (ctx->handlerCount == 0) {
-    printf("pop error: handlers overflow");
-    exit(1);
+static union ret main·r0(struct context *ctx, union args args) {
+  int n;
+  {
+    bool p = args.main·r0.argc == 1;
+    if (p) {
+      ask(ctx, &ctx->runnables[0]);
+      context·push(ctx, (struct runnable){.cb = main·r1});
+      return (union ret){.main = tt};
+    } else {
+      n = 0;
+    }
   }
-  ctx->handlerCount--;
-  return ctx->handlers[ctx->handlerCount];
+  printf("%d\n", n);
+  ctx->to = -1;
+  return (union ret){.main = tt};
 }
 
-static bool Context·isYielding(struct Context *ctx) { return ctx->isYielding; }
-
-static enum Unit perform·ask(struct Context *ctx, int evID,
-                             enum Unit (*next)(struct Context *ctx, int n)) {
-  return Context·handler(ctx, evID)->reader.ask(ctx, next);
+static union ret main·r1(struct context *ctx, union args args) {
+  ctx->to = -1;
+  printf("%d\n", args.main·r1.n);
+  return (union ret){.main = tt};
 }
 
 /*
 effect reader
   ctl ask(): int
-
 fun main()
-  with handler
-    ctl ask()
-      resume(42)
-      resume(69)
-  println(ask())
-  // Output:
-  // 42
-  // 69
+  with ctl ask()
+    resume(42)
+    resume(69)
+  println(if argc == 1 then ask() else 0)
 */
-
-static enum Unit main·k0(struct Context *ctx);
-static enum Unit main·k1(struct Context *ctx, int n);
-
-static enum Unit main·k0(struct Context *ctx) {
-  return perform·ask(ctx, 0, main·k1);
-}
-
-static enum Unit main·k1(struct Context *ctx, int n) {
-  (void)ctx;
-  printf("%d\n", n);
-  return TT;
-}
-
-static enum Unit main·reader·ask(struct Context *ctx,
-                                 enum Unit (*next)(struct Context *ctx,
-                                                   int n)) {
-  next(ctx, 42);
-  if (Context·isYielding(ctx)) {
-    return TT;
-  }
-  enum Unit ret = next(ctx, 69);
-  if (Context·isYielding(ctx)) {
-    return TT;
-  }
-  return ret;
-}
-
 int main(int argc, const char *argv[]) {
-  (void)argc;
   (void)argv;
-
-  struct Context ctx;
-  Context·init(&ctx);
-
-  Context·push(&ctx, (union Handler){.reader = {.ask = main·reader·ask}});
-  main·k0(&ctx);
-  Context·pop(&ctx);
-
+  struct context ctx;
+  context·init(&ctx);
+  schedule·reader(&ctx, (struct runnable){.cb = main·ask·r0},
+                  (struct runnable){.cb = main·r0},
+                  (union args){.main·r0 = {argc}});
   return 0;
 }
