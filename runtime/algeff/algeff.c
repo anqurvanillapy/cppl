@@ -7,52 +7,51 @@ enum unit { tt };
 struct context;
 struct runnable;
 
-struct args·main·r0 {
-  int argc;
-};
-
-struct args·main·r1 {
-  int n;
-};
-
-union args {
-  enum unit ask;
-  struct args·main·r0 main·r0;
-  struct args·main·r1 main·r1;
-};
-
-union ret {
-  enum unit main;
-};
-
 struct runnable {
-  union args args;
-  union ret (*cb)(struct context *ctx, union args args);
+  union args {
+    enum unit ask;
+    struct args·main·r0 {
+      int argc;
+    } main·r0;
+    struct args·main·r1 {
+      int n;
+    } main·r1;
+  } args;
+  union ret {
+    enum unit main;
+  } (*cb)(struct context *ctx, union args args);
 };
 
 struct context {
-  int to;
-  struct runnable *handler;
+  int to, back;
   struct runnable runnables[16];
   size_t count;
 };
 
 static void context·init(struct context *ctx) {
   ctx->to = -1;
+  ctx->back = -1;
   ctx->count = 0;
 }
 
-static void context·push(struct context *ctx, struct runnable f) {
+static int context·push(struct context *ctx, struct runnable f) {
   assert(ctx->count < sizeof(ctx->runnables) / sizeof(struct runnable));
   ctx->runnables[ctx->count] = f;
+  int at = (int)ctx->count;
   ctx->count++;
+  return at;
 }
 
 static void context·yield(struct context *ctx, int to, union args args) {
   ctx->to = to;
-  ctx->handler = NULL;
   ctx->runnables[ctx->to].args = args;
 }
+
+static void context·back(struct context *ctx, int back) { ctx->back = back; }
+
+static void context·stop(struct context *ctx) { ctx->to = -1; }
+
+static void context·forward(struct context *ctx) { ctx->back = -1; }
 
 static union ret main·ask·r0(struct context *ctx, union args args);
 static union ret main·ask·r1(struct context *ctx, union args args);
@@ -61,16 +60,16 @@ static union ret main·r1(struct context *ctx, union args args);
 
 static union ret main·ask·r0(struct context *ctx, union args args) {
   (void)args;
-  context·push(ctx, (struct runnable){.cb = main·ask·r1});
+  int back = context·push(ctx, (struct runnable){.cb = main·ask·r1});
   context·yield(ctx, 2, (union args){.main·r1 = {42}});
-  ctx->handler = &ctx->runnables[3];
+  context·back(ctx, back);
   return (union ret){.main = tt};
 }
 
 static union ret main·ask·r1(struct context *ctx, union args args) {
   (void)args;
   context·yield(ctx, 2, (union args){.main·r1 = {69}});
-  ctx->handler = NULL;
+  context·forward(ctx);
   return (union ret){.main = tt};
 }
 
@@ -82,8 +81,8 @@ static union ret schedule·reader(struct context *ctx, struct runnable handler,
   union ret ret;
   while (true) {
     struct runnable *r;
-    if (ctx->handler && ctx->to < 0) {
-      r = ctx->handler;
+    if (ctx->back >= 0 && ctx->to < 0) {
+      r = &ctx->runnables[ctx->back];
     } else if (ctx->to >= 0) {
       r = &ctx->runnables[ctx->to];
     } else {
@@ -94,9 +93,9 @@ static union ret schedule·reader(struct context *ctx, struct runnable handler,
   return ret;
 }
 
-static int ask(struct context *ctx, struct runnable *handler) {
-  ctx->handler = handler;
+static int ask(struct context *ctx) {
   context·yield(ctx, 0, (union args){.ask = tt});
+  context·back(ctx, 0);
   return 0;
 }
 
@@ -105,7 +104,7 @@ static union ret main·r0(struct context *ctx, union args args) {
   {
     bool p = args.main·r0.argc == 1;
     if (p) {
-      ask(ctx, &ctx->runnables[0]);
+      ask(ctx);
       context·push(ctx, (struct runnable){.cb = main·r1});
       return (union ret){.main = tt};
     } else {
@@ -113,13 +112,13 @@ static union ret main·r0(struct context *ctx, union args args) {
     }
   }
   printf("%d\n", n);
-  ctx->to = -1;
+  context·stop(ctx);
   return (union ret){.main = tt};
 }
 
 static union ret main·r1(struct context *ctx, union args args) {
-  ctx->to = -1;
   printf("%d\n", args.main·r1.n);
+  context·stop(ctx);
   return (union ret){.main = tt};
 }
 
